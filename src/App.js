@@ -361,6 +361,10 @@ function App() {
                         formik.touched.companyName &&
                         Boolean(formik.errors.companyName)
                       }
+                      helperText={
+                        formik.touched.companyName &&
+                        formik.errors.companyName
+                      }
                     />
                   </Grid>
                   <Grid item xs={6}>
