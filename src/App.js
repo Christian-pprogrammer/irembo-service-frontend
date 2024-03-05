@@ -1,4 +1,4 @@
-import { Button, Grid, InputLabel, MenuItem, TextField, useRadioGroup } from "@mui/material";
+import { Button, Grid, InputLabel, MenuItem, TextField } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import axios from "axios";
@@ -11,10 +11,14 @@ function App() {
   const validationSchema = Yup.object().shape({
     citizenship: Yup.string().required("Citizenship is required"),
     idNumber: Yup.string().when("citizenship", (citizenship, field) =>
-      citizenship === "Rwandan" ? field.required('This field is required') : field
+      citizenship === "Rwandan"
+        ? field.required("This field is required")
+        : field
     ),
     passportNumber: Yup.string().when("citizenship", (citizenship, field) =>
-      citizenship === "Foreigner" ? field.required('This field is required') : field
+      citizenship === "Foreigner"
+        ? field.required("This field is required")
+        : field
     ),
     otherNames: Yup.string().required("This field is required"),
     surname: Yup.string().required("This field is required"),
@@ -32,7 +36,9 @@ function App() {
     otherPurpose: Yup.string().when(
       "purposeOfImportation",
       (purposeOfImportation, field) =>
-        purposeOfImportation === "Other" ? field.required('This field is required') : field
+        purposeOfImportation === "Other"
+          ? field.required("This field is required")
+          : field
     ),
     productCategory: Yup.string().required("This field is required"),
     productName: Yup.string().required("This field is required"),
@@ -58,7 +64,7 @@ function App() {
     productCategory: "",
     productName: "",
     unitOfMeasurement: "",
-    weight: 0,
+    weight: "",
     productDescription: "",
   };
 
@@ -66,16 +72,12 @@ function App() {
     initialValues,
 
     onSubmit: async (data) => {
-
       console.log("submit");
-      try{
-        const res = await axios.post(
-          "http://localhost:4000/submit-form",
-          data
-        );
+      try {
+        const res = await axios.post("http://localhost:4000/submit-form", data);
         alert(res.data.message);
         formRef.reset();
-      }catch(err) {
+      } catch (err) {
         alert("Error submitting the email");
       }
     },
@@ -143,16 +145,17 @@ function App() {
                           name="idNumber"
                           type="text"
                           placeholder="Enter Identification document number"
-                          required
                           value={formik.values.idNumber}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
                           error={
                             formik.touched.idNumber &&
-                            Boolean(formik.errors.idNumber)
+                            Boolean(!formik.values.idNumber)
                           }
                           helperText={
-                            formik.touched.idNumber && formik.errors.idNumber
+                            formik.touched.idNumber &&
+                            Boolean(!formik.values.idNumber) &&
+                            "This field is required"
                           }
                         />
                       </Grid>
@@ -174,11 +177,12 @@ function App() {
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.passportNumber &&
-                          Boolean(formik.errors.passportNumber)
+                          Boolean(!formik.values.passportNumber)
                         }
                         helperText={
                           formik.touched.passportNumber &&
-                          formik.errors.passportNumber
+                          Boolean(!formik.values.passportNumber) &&
+                          "This field is required"
                         }
                       />
                     </Grid>
@@ -479,6 +483,10 @@ function App() {
                         formik.touched.purposeOfImportation &&
                         Boolean(formik.errors.purposeOfImportation)
                       }
+                      helperText={
+                        formik.touched.purposeOfImportation &&
+                        formik.errors.purposeOfImportation
+                      }
                     >
                       <MenuItem value="Direct sale">- Direct sale</MenuItem>
                       <MenuItem value="Personal use">- Personal use</MenuItem>
@@ -486,7 +494,7 @@ function App() {
                       <MenuItem value="Other">- Other</MenuItem>
                     </TextField>
                   </Grid>
-                  {formik.values.otherPurpose === "Other" && (
+                  {formik.values.purposeOfImportation === "Other" && (
                     <Grid item xs={6}>
                       <InputLabel htmlFor="otherPurpose">
                         Specify purpose of importation *
@@ -503,7 +511,12 @@ function App() {
                         onBlur={formik.handleBlur}
                         error={
                           formik.touched.otherPurpose &&
-                          Boolean(formik.errors.otherPurpose)
+                          Boolean(!formik.values.otherPurpose)
+                        }
+                        helperText={
+                          formik.touched.otherPurpose &&
+                          Boolean(!formik.values.otherPurpose) &&
+                          "This field is required"
                         }
                       />
                     </Grid>
@@ -536,6 +549,10 @@ function App() {
                       error={
                         formik.touched.productCategory &&
                         Boolean(formik.errors.productCategory)
+                      }
+                      helperText={
+                        formik.touched.productCategory &&
+                        formik.errors.productCategory
                       }
                     >
                       <MenuItem value="General purpose">
