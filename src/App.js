@@ -1,20 +1,20 @@
-
-
-import { Button, Grid, InputLabel, MenuItem, TextField } from "@mui/material";
+import { Button, Grid, InputLabel, MenuItem, TextField, useRadioGroup } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useRef } from "react";
 
 function App() {
+  const formRef = useRef();
   const validationSchema = Yup.object().shape({
     citizenship: Yup.string().required("Citizenship is required"),
     idNumber: Yup.string().when("citizenship", (citizenship, field) =>
-      citizenship ? field.required() : field
+      citizenship === "Rwandan" ? field.required('This field is required') : field
     ),
     passportNumber: Yup.string().when("citizenship", (citizenship, field) =>
-      citizenship ? field.required() : field
+      citizenship === "Foreigner" ? field.required('This field is required') : field
     ),
     otherNames: Yup.string().required("This field is required"),
     surname: Yup.string().required("This field is required"),
@@ -32,7 +32,7 @@ function App() {
     otherPurpose: Yup.string().when(
       "purposeOfImportation",
       (purposeOfImportation, field) =>
-        purposeOfImportation ? field.required() : field
+        purposeOfImportation === "Other" ? field.required('This field is required') : field
     ),
     productCategory: Yup.string().required("This field is required"),
     productName: Yup.string().required("This field is required"),
@@ -64,18 +64,22 @@ function App() {
 
   const formik = useFormik({
     initialValues,
-    validationSchema,
+
     onSubmit: async (data) => {
+
+      console.log("submit");
       try{
         const res = await axios.post(
           "http://localhost:4000/submit-form",
           data
         );
         alert(res.data.message);
+        formRef.reset();
       }catch(err) {
         alert("Error submitting the email");
       }
     },
+    validationSchema: validationSchema,
   });
 
   return (
@@ -86,6 +90,7 @@ function App() {
           e.preventDefault();
           formik.handleSubmit(e);
         }}
+        ref={formRef}
       >
         <div className="card">
           <div className="card-header">
@@ -362,8 +367,7 @@ function App() {
                         Boolean(formik.errors.companyName)
                       }
                       helperText={
-                        formik.touched.companyName &&
-                        formik.errors.companyName
+                        formik.touched.companyName && formik.errors.companyName
                       }
                     />
                   </Grid>
