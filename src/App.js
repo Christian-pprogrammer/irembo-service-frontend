@@ -1,11 +1,6 @@
-import {
-  Box,
-  Button,
-  Grid,
-  InputLabel,
-  MenuItem,
-  TextField,
-} from "@mui/material";
+
+
+import { Button, Grid, InputLabel, MenuItem, TextField } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import axios from "axios";
@@ -70,14 +65,28 @@ function App() {
   const formik = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async (data) => {
+      try{
+        const res = await axios.post(
+          "http://localhost:4000/submit-form",
+          data
+        );
+        alert(res.data.message);
+      }catch(err) {
+        alert("Error submitting the email");
+      }
     },
   });
 
   return (
     <div className="container">
-      <Box component="form" sx={{ mt: 1 }} onSubmit={formik.handleSubmit}>
+      <form
+        sx={{ mt: 1 }}
+        onSubmit={(e) => {
+          e.preventDefault();
+          formik.handleSubmit(e);
+        }}
+      >
         <div className="card">
           <div className="card-header">
             <h2>Business Owner Details</h2>
@@ -448,6 +457,7 @@ function App() {
                       Purpose of Importation *
                     </InputLabel>
                     <TextField
+                      select
                       size="small"
                       margin="normal"
                       fullWidth
@@ -505,6 +515,7 @@ function App() {
                       Product category *
                     </InputLabel>
                     <TextField
+                      select
                       size="small"
                       margin="normal"
                       fullWidth
@@ -558,6 +569,7 @@ function App() {
                     </InputLabel>
 
                     <TextField
+                      select
                       size="small"
                       margin="normal"
                       fullWidth
@@ -647,7 +659,7 @@ function App() {
             </Button>
           </Grid>
         </Grid>
-      </Box>
+      </form>
     </div>
   );
 }
