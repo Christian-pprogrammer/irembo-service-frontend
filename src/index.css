@@ -14,4 +14,13 @@ code {
 
 .card {
   margin-top: 30px;
+  border: 2px solid #538adb !important;
 }
+
+.card-header {
+  background-color: #dfebf6 !important;
+}
+.card-header h5 {
+  color: #0063cf;
+  font-size: 20px !important;
+} 

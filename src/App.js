@@ -9,7 +9,7 @@ import { useRef } from "react";
 function App() {
   const formRef = useRef();
   const validationSchema = Yup.object().shape({
-    citizenship: Yup.string().required("Citizenship is required"),
+    citizenship: Yup.string().required("This field is required"),
     idNumber: Yup.string().when("citizenship", (citizenship, field) =>
       citizenship === "Rwandan"
         ? field.required("This field is required")
@@ -96,7 +96,7 @@ function App() {
       >
         <div className="card">
           <div className="card-header">
-            <h2>Business Owner Details</h2>
+            <h5>Business Owner Details</h5>
           </div>
           <div className="card-body">
             <h5>Business Owner Details</h5>
@@ -126,6 +126,11 @@ function App() {
                       helperText={
                         formik.touched.citizenship && formik.errors.citizenship
                       }
+                      SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (value) =>
+                          value === "" ? "Select citizenship" : value,
+                      }}
                     >
                       <MenuItem value="Rwandan">- Rwandan</MenuItem>
                       <MenuItem value="Foreigner">- Foreigner</MenuItem>
@@ -260,6 +265,7 @@ function App() {
                       id="phoneNumber"
                       name="phoneNumber"
                       type="text"
+                      placeholder="Enter phone number"
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -273,6 +279,7 @@ function App() {
                       id="emailAddress"
                       name="emailAddress"
                       type="text"
+                      placeholder="Enter email address"
                     />
                   </Grid>
                 </Grid>
@@ -315,7 +322,7 @@ function App() {
 
         <div className="card">
           <div className="card-header">
-            <h2>Business Details</h2>
+            <h5>Business Details</h5>
           </div>
           <div className="card-body">
             <h5>Business Details</h5>
@@ -346,6 +353,11 @@ function App() {
                         formik.touched.businessType &&
                         formik.errors.businessType
                       }
+                      SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (value) =>
+                          value === "" ? "Enter Business Type" : value,
+                      }}
                     >
                       <MenuItem value="Retailer">- Retailer</MenuItem>
                       <MenuItem value="Wholesale">- Wholesale</MenuItem>
@@ -363,6 +375,7 @@ function App() {
                       id="companyName"
                       name="companyName"
                       type="text"
+                      placeholder="Enter company name"
                       value={formik.values.companyName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -387,6 +400,7 @@ function App() {
                       value={formik.values.tinNumber}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
+                      placeholder="Enter TIN number"
                       max={9}
                       error={
                         formik.touched.tinNumber &&
@@ -401,7 +415,6 @@ function App() {
                     <InputLabel htmlFor="registrationDate">
                       Registration date *
                     </InputLabel>
-
                     <TextField
                       size="small"
                       margin="normal"
@@ -437,6 +450,7 @@ function App() {
                       value={formik.values.companyLocation}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
+                      placeholder="Enter district"
                       error={
                         formik.touched.companyLocation &&
                         Boolean(formik.errors.companyLocation)
@@ -456,7 +470,7 @@ function App() {
         </div>
         <div className="card">
           <div className="card-header">
-            <h2>Product Information</h2>
+            <h5>Product Information</h5>
           </div>
           <div className="card-body">
             <h5>Important details</h5>
@@ -487,6 +501,13 @@ function App() {
                         formik.touched.purposeOfImportation &&
                         formik.errors.purposeOfImportation
                       }
+                      SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (value) =>
+                          value === ""
+                            ? "Select the purpose of importation"
+                            : value,
+                      }}
                     >
                       <MenuItem value="Direct sale">- Direct sale</MenuItem>
                       <MenuItem value="Personal use">- Personal use</MenuItem>
@@ -554,6 +575,11 @@ function App() {
                         formik.touched.productCategory &&
                         formik.errors.productCategory
                       }
+                      SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (value) =>
+                          value === "" ? "Select product category" : value,
+                      }}
                     >
                       <MenuItem value="General purpose">
                         - General purpose
@@ -578,6 +604,7 @@ function App() {
                       value={formik.values.productName}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
+                      placeholder="Enter product name"
                       error={
                         formik.touched.productName &&
                         Boolean(formik.errors.productName)
@@ -612,6 +639,11 @@ function App() {
                         formik.touched.unitOfMeasurement &&
                         formik.errors.unitOfMeasurement
                       }
+                      SelectProps={{
+                        displayEmpty: true,
+                        renderValue: (value) =>
+                          value === "" ? "Enter unit of measurement" : value,
+                      }}
                     >
                       <MenuItem value="Kgs">- Kgs</MenuItem>
                       <MenuItem value="Tonnes">- Tonnes</MenuItem>
@@ -632,6 +664,7 @@ function App() {
                       value={formik.values.weight}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
+                      placeholder="Enter quantity"
                       error={
                         formik.touched.weight && Boolean(formik.errors.weight)
                       }
