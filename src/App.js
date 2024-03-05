@@ -4,10 +4,11 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 function App() {
   const formRef = useRef();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const validationSchema = Yup.object().shape({
     citizenship: Yup.string().required("This field is required"),
     idNumber: Yup.string().when("citizenship", (citizenship, field) =>
@@ -45,6 +46,8 @@ function App() {
     unitOfMeasurement: Yup.string().required("This field is required"),
     weight: Yup.number().required("This field is required"),
     productDescription: Yup.string().required("This field is required"),
+    phoneNumber: Yup.string(),
+    emailAddress: Yup.string(),
   });
   const initialValues = {
     citizenship: "",
@@ -66,6 +69,8 @@ function App() {
     unitOfMeasurement: "",
     weight: "",
     productDescription: "",
+    phoneNumber: "",
+    emailAddress: "",
   };
 
   const formik = useFormik({
@@ -76,7 +81,7 @@ function App() {
       try {
         const res = await axios.post("http://localhost:4000/submit-form", data);
         alert(res.data.message);
-        formRef.reset();
+        return;
       } catch (err) {
         alert("Error submitting the email");
       }
@@ -266,6 +271,16 @@ function App() {
                       name="phoneNumber"
                       type="text"
                       placeholder="Enter phone number"
+                      value={formik.values.phoneNumber}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={
+                        formik.touched.phoneNumber &&
+                        Boolean(formik.errors.phoneNumber)
+                      }
+                      helperText={
+                        formik.touched.phoneNumber && formik.errors.phoneNumber
+                      }
                     />
                   </Grid>
                   <Grid item xs={6}>
@@ -280,6 +295,13 @@ function App() {
                       name="emailAddress"
                       type="text"
                       placeholder="Enter email address"
+                      value={formik.values.emailAddress}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={
+                        formik.touched.emailAddress &&
+                        Boolean(formik.errors.emailAddress)
+                      }
                     />
                   </Grid>
                 </Grid>
@@ -307,9 +329,6 @@ function App() {
                       error={
                         formik.touched.location &&
                         Boolean(formik.errors.location)
-                      }
-                      helperText={
-                        formik.touched.location && formik.errors.location
                       }
                     />
                   </Grid>
@@ -712,8 +731,11 @@ function App() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              disabled={isSubmitting}
             >
-              Submit
+              {
+                isSubmitting ? 'Loading...':'Submit'
+              }
             </Button>
           </Grid>
         </Grid>
